@@ -12,6 +12,12 @@
   cursor: pointer;
 
 }
+.button:hover {
+    border: black;
+    color: black;
+    background-color: gray;
+
+  }
 
 #generate{
     background-color: #555555;
