@@ -1,15 +1,67 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Maze Solver</title>
-        <link href = "style.css" rel = "stylesheet" type = "text/css">
-        <link href="https://fonts.googleapis.com/css?family=Cardo:400,700|Oswald" rel="stylesheet">
-        </head>
-<body>
 
-<h1>Maze Solver</h1>
+  <head>
+    <title>Maze Solver</title>
+    <link href = "style.css" rel = "stylesheet" type = "text/css">
+    <link href="https://fonts.googleapis.com/css?family=Cardo:400,700|Oswald" rel="stylesheet">
+  </head>
 
-<h>I want to generate a maze</h>
+  
+  <body>
+
+    <div class="top-banner">
+      <h1>Maze Solver</h1> 
+    </div>
+
+    <div class="body">
+
+      <input class="slider" type="range" min="5" max="30" value="10" class="slider" id="myRange">
+
+      <div class="grid-container"></div>
+
+      <form>
+        <label for="maze-gen">Choose a Maze Generation Algorithm</label>
+        
+        <select name="maze-gen" id="maze-gen">
+          <option value="option1">Option 1</option>
+          <option value="option2">Option 2</option>
+          <option value="option3">Option 3</option>
+          <option value="option4">Option 4</option>
+        </select>
+
+        <input type="submit" value="Generate">
+
+      </form>
+
+      <form>
+        <label for="maze-solve">Choose a Maze Solving Algorithm</label>
+        
+        <select name="maze-solve" id="maze-solve">
+          <option value="option1">Option 1</option>
+          <option value="option2">Option 2</option>
+          <option value="option3">Option 3</option>
+          <option value="option4">Option 4</option>
+        </select>
+
+        <input type="submit" value="Solve">
+        
+      </form>
+
+      
+    
+    </div>
+
+    <div class="footer">
+    </div>
+
+  </body>
+
+</html>
+
+<script src="script.js"></script>
+
+<!-- <h>I want to generate a maze</h>
 <br></br>
 <div id = "button">
     <select name="generate" id="generate">
@@ -20,20 +72,17 @@
     </select>
     <button class="button" >Generate Maze</button>
 </div>
-  
-  <br><br>
-  <h>I want to solve this maze</h>
-  <br></br>
-  <div id = "button">
-      <select name="solve" id="solve">
-        <option value="volvo">Option1</option>
-        <option value="saab">Option2</option>
-        <option value="opel">Option3</option>
-        <option value="audi">Option3</option>
-      </select>
-      <button class="button">Solve Maze</button>
-    </div>
+   -->
+<!-- <br><br>
+<h>I want to solve this maze</h>
+<br></br>
+<div id = "button">
+    <select name="solve" id="solve">
+      <option value="volvo">Option1</option>
+      <option value="saab">Option2</option>
+      <option value="opel">Option3</option>
+      <option value="audi">Option3</option>
+    </select>
+    <button class="button">Solve Maze</button>
+  </div> -->
    
- 
-</body>
-</html>
