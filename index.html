@@ -20,7 +20,7 @@
 
       <div class="grid-container"></div>
 
-      <form>
+      <form onsubmit="event.preventDefault();generateMaze()">
         <label for="maze-gen">Choose a Maze Generation Algorithm</label>
         
         <select name="maze-gen" id="maze-gen">
@@ -29,12 +29,11 @@
           <option value="option3">Option 3</option>
           <option value="option4">Option 4</option>
         </select>
-
         <input type="submit" value="Generate">
 
       </form>
 
-      <form>
+      <form onsubmit="event.preventDefault();solveMaze()">
         <label for="maze-solve">Choose a Maze Solving Algorithm</label>
         
         <select name="maze-solve" id="maze-solve">

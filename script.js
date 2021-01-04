@@ -23,6 +23,46 @@ makeGrid = (size) => {
     }
 }
 
+const generateMaze = () => {
+    switch (document.getElementById('maze-gen').value) {
+        case 'option1':
+            console.log('GM', 1)
+            break;
+        case 'option2':
+            console.log('GM', 2)
+            break;
+        case 'option3':
+            console.log('GM', 3)
+            break;
+        case 'option4':
+            console.log('GM', 4)
+            break;
+        default:
+            console.log('GM',null)
+            break;
+    }
+}
+
+const solveMaze = () => {
+    switch (document.getElementById('maze-solve').value) {
+        case 'option1':
+            console.log('SM', 1)
+            break;
+        case 'option2':
+            console.log('SM', 2)
+            break;
+        case 'option3':
+            console.log('SM', 3)
+            break;
+        case 'option4':
+            console.log('SM', 4)
+            break;
+        default:
+            console.log('SM',null)
+            break;
+    }
+}
+
 // Make length and width equal 
 const grid = document.getElementsByClassName('grid-container')[0]
 const width = window.getComputedStyle(grid).getPropertyValue('width')
