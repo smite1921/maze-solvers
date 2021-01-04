@@ -63,10 +63,20 @@ const solveMaze = () => {
     }
 }
 
+const coordinates = () => {
+    const arr = document.getElementsByClassName('grid-item')
+    const length = document.getElementsByClassName('slider')[0].value
+    for (let i=0;i<arr.length;i++) {
+        let row = Math.floor(i/length)
+        let col = i % length
+        console.log(row, col)
+    }
+}
+
 // Make length and width equal 
 const grid = document.getElementsByClassName('grid-container')[0]
 const width = window.getComputedStyle(grid).getPropertyValue('width')
 grid.style.height = width 
 makeGrid(slider.value)
-
+coordinates()
 // Set grid container for 15 rows and 15 colums
