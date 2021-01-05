@@ -61,8 +61,8 @@ window.onresize = () => {
  * with the new value of the slider.
  */
 SLIDER.oninput = () => {
-    makeGrid(SLIDER.value)
     LENGTH = SLIDER.value
+    makeGrid(LENGTH)
 }
 
 /**
@@ -82,16 +82,16 @@ const makeGrid = (n) => {
         if (col == 0) {
             box.classList.add('grid-item-left')
         }
-        if (row == (LENGTH-1)) {
+        if (row == (n-1)) {
             box.classList.add('grid-item-bottom')
         }
-        if (col == (LENGTH-1)) {
+        if (col == (n-1)) {
             box.classList.add('grid-item-right')
         }
     }
 
     for (let i=0;i<n*n;i++) {
-        let [row, col] = [Math.floor(i/LENGTH), i % LENGTH]
+        let [row, col] = [Math.floor(i/n), i % n]
         let gridBox = document.createElement('div')
         applyCSS(gridBox, row, col)
         grid.appendChild(gridBox)
