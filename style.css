@@ -41,6 +41,26 @@ form{
   border-bottom: 2px solid;
 }
 
+.grid-item-no-top {
+  border-top: 0px;
+}
+
+.grid-item-no-bottom {
+  border-bottom: 0px;
+}
+
+.grid-item-no-left {
+  border-left: 0px ;
+}
+
+.grid-item-no-right {
+  border-right: 0px ;
+}
+
+
+
+
+
 
 h1 {
   text-align: center;
