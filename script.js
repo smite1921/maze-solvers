@@ -1,28 +1,9 @@
-// setup window resizing 
-window.onresize = () => {
-    const grid = document.getElementsByClassName('grid-container')[0]
-    const width = window.getComputedStyle(grid).getPropertyValue('width')
-    grid.style.height = width 
-}
+const SLIDER = document.getElementsByClassName('slider')[0];
+let LENGTH = SLIDER.value
 
-// setup slider
-const slider = document.getElementsByClassName('slider')[0];
-slider.oninput = () => {
-    makeGrid(slider.value)
-}
-
-makeGrid = (size) => {
-    grid.innerHTML=''
-    grid.style.gridTemplateRows = '1fr '.repeat(size)
-    grid.style.gridTemplateColumns = '1fr '.repeat(size)
-
-    for (let i=0;i<size*size;i++) {
-        let gridBox = document.createElement('div')
-        gridBox.classList.add('grid-item')
-        grid.appendChild(gridBox)
-    }
-}
-
+/**
+ * Callback function for generate maze form
+ */
 const generateMaze = () => {
     switch (document.getElementById('maze-gen').value) {
         case 'option1':
@@ -43,6 +24,9 @@ const generateMaze = () => {
     }
 }
 
+/**
+ * Callback function for solve maze form
+ */
 const solveMaze = () => {
     switch (document.getElementById('maze-solve').value) {
         case 'option1':
@@ -63,20 +47,59 @@ const solveMaze = () => {
     }
 }
 
-const coordinates = () => {
-    const arr = document.getElementsByClassName('grid-item')
-    const length = document.getElementsByClassName('slider')[0].value
-    for (let i=0;i<arr.length;i++) {
-        let row = Math.floor(i/length)
-        let col = i % length
-        console.log(row, col)
+/**
+ * Makes grid responsive during window resizing
+ */
+window.onresize = () => {
+    const grid = document.getElementsByClassName('grid-container')[0]
+    const width = window.getComputedStyle(grid).getPropertyValue('width')
+    grid.style.height = width 
+}
+
+/**
+ * Callback function for when slider value is changed. It creates a new grid
+ * with the new value of the slider.
+ */
+SLIDER.oninput = () => {
+    makeGrid(SLIDER.value)
+    LENGTH = SLIDER.value
+}
+
+/**
+ * Makes a n x n bridge
+ * @param {} n
+ */
+const makeGrid = (n) => {
+    grid.innerHTML=''
+    grid.style.gridTemplateRows = '1fr '.repeat(n)
+    grid.style.gridTemplateColumns = '1fr '.repeat(n)
+
+    const applyCSS = (box, row, col) => {
+        box.classList.add('grid-item')
+        if (row == 0) {
+            box.classList.add('grid-item-top')
+        }
+        if (col == 0) {
+            box.classList.add('grid-item-left')
+        }
+        if (row == (LENGTH-1)) {
+            box.classList.add('grid-item-bottom')
+        }
+        if (col == (LENGTH-1)) {
+            box.classList.add('grid-item-right')
+        }
+    }
+
+    for (let i=0;i<n*n;i++) {
+        let [row, col] = [Math.floor(i/LENGTH), i % LENGTH]
+        let gridBox = document.createElement('div')
+        applyCSS(gridBox, row, col)
+        grid.appendChild(gridBox)
     }
 }
 
-// Make length and width equal 
 const grid = document.getElementsByClassName('grid-container')[0]
 const width = window.getComputedStyle(grid).getPropertyValue('width')
 grid.style.height = width 
-makeGrid(slider.value)
-coordinates()
-// Set grid container for 15 rows and 15 colums
+makeGrid(LENGTH)
+
