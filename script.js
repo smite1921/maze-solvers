@@ -32,7 +32,7 @@ const generateMazeBinary = () => {
         console.log(row, col, i)
         if (!box.visited) {
             box.visited = true
-            if ((row == (LENGTH - 1)) && (col == (LENGTH -1))) {
+            if ((row == (LENGTH - 1)) && (col == (LENGTH -1))) { //corner right
                 continue
             }
             else if (row == (LENGTH -1)) {
@@ -55,6 +55,117 @@ const generateMazeBinary = () => {
     }
 }   
 
+const generatePrims = () =>{
+    const boxes = GRID.children
+    
+}
+
+const generateAldousBroder = () =>{
+    const boxes = GRID.children
+    
+    // (0) south, (1) north (2) east (3) west 
+    let counter = LENGTH*LENGTH;
+    let i = 0
+    let box = boxes[i]
+    box.visited = true
+    counter = counter -1
+    const random = () => Math.floor((Math.random() * 4) + 0)
+
+    while(counter != 0){ 
+        let [row, col] = [Math.floor(i/LENGTH), i % LENGTH]
+        box = boxes[i]
+        let r = random()
+        if (r == 0){//down
+            box = boxes[i+LENGTH]
+            if (row == (LENGTH - 1)) {
+                continue
+            }
+            if (!box.visited){
+                box.visited = true
+                box.classList.add('grid-item-no-top')
+                let boxTop = boxes[i]
+                boxTop.classList.add('grid-item-no-bottom')
+                counter = counter - 1
+                i = i + LENGTH
+            }
+            else{
+                i = i+LENGTH
+            }
+        }
+        else if (r == 1){ //top
+            box = boxes[i-LENGTH]
+            if (row == (0)){
+                continue
+            }
+            if (!box.visited){
+                box.visited = true
+                box.classList.add('grid-item-no-bottom')
+                let boxBottom = boxes[i]
+                boxBottom.classList.add('grid-item-no-top')
+                counter = counter - 1
+                i = i-LENGTH
+            }
+            else{
+                i = i-LENGTH
+            }
+        }
+        else if (r == 2){ //right
+            box = boxes[i+1]
+            if (col == (LENGTH-1)){
+                continue
+            }
+            if (!box.visited){
+                box.visited = true
+                box.classList.add('grid-item-no-left')
+                let boxLeft = boxes[i]
+                boxLeft.classList.add('grid-item-no-right')
+                counter = counter - 1
+                i = i+1
+            }
+            else{
+                i = i+1
+            }
+        }
+        else if (r == 3){ //left
+            if (col == 0){
+                continue
+            }
+            box = boxes[i-1]
+            if (!box.visited){
+                box.visited = true
+                box.classList.add('grid-item-no-right')
+                let boxRight = boxes[i]
+                boxRight.classList.add('grid-item-no-left')
+                counter = counter - 1
+                i = i-1
+            }
+            else{
+                i=i-1
+            }
+        }
+        
+    }
+
+    
+
+    /*
+    initialize the box, (0th box) -> check visited
+    while (counter != 0)
+    random assigning either to get s,e,w,n
+    if (s) -> box goes down, check if its unvisited -> remove border -> counter -1 
+                                    if its visited -> pass
+
+
+    */
+        
+        
+    
+
+    
+
+    
+}
+
 /**
  * Callback function for generate maze form
  */
@@ -65,11 +176,12 @@ const generateMaze = () => {
             generateMazeBinary()
             break;
         case 'option2':
-            console.log('GM', 2)
+            console.log('Maze Generation - Aldous-Broder', 2)
+            generateAldousBroder()
             break;
         case 'option3':
-            console.log('GM', 3)
-            break;
+            console.log('Maze Generation - Prims', 3)
+            generatePrims();
         case 'option4':
             console.log('GM', 4)
             break;
