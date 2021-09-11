@@ -2,6 +2,13 @@ const SLIDER = document.getElementsByClassName('slider')[0];
 const GRID = document.getElementsByClassName('grid-container')[0]
 let LENGTH = parseInt(SLIDER.value)
 
+// Constants for maze tranisitions
+const TIME = 40; // Delay between each step
+const LEFT = 0;
+const TOP = 1;
+const RIGHT = 2;
+const BOTTOM = 3; 
+
 /**
  * Makes grid responsive during window resizing
  */
@@ -19,39 +26,112 @@ SLIDER.oninput = () => {
     makeGrid(LENGTH)
 }
 
+const delay = () => new Promise(resolve => setTimeout(resolve,TIME));
 
-const generateMazeBinary = () => {
-    const boxes = GRID.children
+const colorBox = async (box, active) => {
+    box.classList.add(active ? 'grid-item-active' : 'grid-item-visited');
+    await delay();
+}
+
+const removeBoxSide = async (i, boxes, side) => {
+    
+    // We need to remove the border of the current box, and the one next to it
+    let curBox = boxes[i];
+    let adjaBox = undefined;
+
+    let curBoxHighlightSide = null;
+    let curBoxRemoveSide = null;
+    let adjaBoxHighlightSide = null;
+    let adjaBoxRemoveSide = null;
+
+    switch (side) {
+        case TOP:
+            curBoxHighlightSide = 'grid-item-highlight-top';
+            curBoxRemoveSide = 'grid-item-no-top';
+            // We also have to remove the bottom border of the top box
+            adjaBox = boxes[i-LENGTH];
+            if (adjaBox != undefined) {
+                adjaBoxHighlightSide = 'grid-item-highlight-bottom';
+                adjaBoxRemoveSide = 'grid-item-no-bottom';
+            }
+            break;
+        case BOTTOM:
+            curBoxHighlightSide = 'grid-item-highlight-bottom'
+            curBoxRemoveSide = 'grid-item-no-bottom'
+            // We also have to remove the top border of the bottom box
+            adjaBox = boxes[i+LENGTH];
+            if (adjaBox != undefined) {
+                adjaBoxHighlightSide = 'grid-item-highlight-top';
+                adjaBoxRemoveSide = 'grid-item-no-top';
+            }
+            break;
+        case LEFT:
+            curBoxHighlightSide = 'grid-item-highlight-left'
+            curBoxRemoveSide = 'grid-item-no-left'
+            // We also have to remove the right border of the left box
+            adjaBox = boxes[i-1];
+            if (adjaBox != undefined) {
+                adjaBoxHighlightSide = 'grid-item-highlight-right';
+                adjaBoxRemoveSide = 'grid-item-no-right';
+            }
+            break;
+        case RIGHT:
+            curBoxHighlightSide = 'grid-item-highlight-right'
+            curBoxRemoveSide = 'grid-item-no-right'
+            // We also have to remove the left border of the right box
+            adjaBox = boxes[i+1];
+            if (adjaBox != undefined) {
+                adjaBoxHighlightSide = 'grid-item-highlight-left';
+                adjaBoxRemoveSide = 'grid-item-no-left';
+            }
+            break;
+        default:
+            break;
+    }
+
+    // Highlight the border to be removed
+    curBox.classList.add(curBoxHighlightSide);
+    if (adjaBox != undefined) {
+        adjaBox.classList.add(adjaBoxHighlightSide)
+    }
+    await delay();
+
+    // Remove the border
+    curBox.classList.add(curBoxRemoveSide);
+    if (adjaBox != undefined) {
+        adjaBox.classList.add(adjaBoxRemoveSide)
+    }
+    await delay();
+}
+
+const generateMazeBinary = async () => {
+
+    // We just need 1 second interval between each iteration.
+    const boxes = GRID.children;
     
     // Heads (0) = carve south, (1) Tails = carve East
-    const random = () => Math.floor((Math.random() * 2) + 0)
+    const random = () => Math.floor((Math.random() * 2) + 0);
 
     for (let i=0; i < boxes.length;i++) {
-        let [row, col] = [Math.floor(i/LENGTH), i % LENGTH]
-        let box = boxes[i]
-        console.log(row, col, i)
+        let [row, col] = [Math.floor(i/LENGTH), i % LENGTH];
+        let box = boxes[i];
+        await colorBox(box, true)
         if (!box.visited) {
-            box.visited = true
+            box.visited = true;
             if ((row == (LENGTH - 1)) && (col == (LENGTH -1))) { //corner right
-                continue
+                console.log('end');
             }
             else if (row == (LENGTH -1)) {
-                box.classList.add('grid-item-no-right')
-                let boxOnRight = boxes[i+1]
-                boxOnRight.classList.add('grid-item-no-left')
+                await removeBoxSide(i, boxes, RIGHT);
             }
             else if (col == (LENGTH - 1)) {
-                box.classList.add('grid-item-no-bottom')
-                let boxBelow = boxes[i+LENGTH]
-                boxBelow.classList.add('grid-item-no-top')
+                await removeBoxSide(i, boxes, BOTTOM);
             }
             else {
-                let carve = random() == 0 ? true : false
-                box.classList.add(carve ? 'grid-item-no-bottom' : 'grid-item-no-right')
-                let box2 = carve ? boxes[i+LENGTH] : boxes[i+1]
-                box2.classList.add(carve ? 'grid-item-no-top' : 'grid-item-no-left')
+                await removeBoxSide(i, boxes,  (random() == 0) ? BOTTOM : RIGHT);
             }
         }
+        await colorBox(box, false);
     }
 }   
 
@@ -158,12 +238,6 @@ const generateAldousBroder = () =>{
 
     */
         
-        
-    
-
-    
-
-    
 }
 
 /**
@@ -215,27 +289,27 @@ const solveMaze = () => {
 }
 
 /**
- * Makes a n x n bridge
+ * Makes a n x n grid
  * @param {} n
  */
 const makeGrid = (n) => {
     GRID.innerHTML=''
-    GRID.style.gridTemplateRows = '1fr '.repeat(n)
-    GRID.style.gridTemplateColumns = '1fr '.repeat(n)
+    GRID.style.gridTemplateRows = '1fr '.repeat(n);
+    GRID.style.gridTemplateColumns = '1fr '.repeat(n);
 
     const applyCSS = (box, row, col) => {
-        box.classList.add('grid-item')
+        box.classList.add('grid-item');
         if (row == 0) {
-            box.classList.add('grid-item-top')
+            box.classList.add('grid-item-top');
         }
         if (col == 0) {
-            box.classList.add('grid-item-left')
+            box.classList.add('grid-item-left');
         }
         if (row == (n-1)) {
-            box.classList.add('grid-item-bottom')
+            box.classList.add('grid-item-bottom');
         }
         if (col == (n-1)) {
-            box.classList.add('grid-item-right')
+            box.classList.add('grid-item-right');
         }
     }
 
