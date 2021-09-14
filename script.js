@@ -3,7 +3,7 @@ const GRID = document.getElementsByClassName('grid-container')[0]
 let LENGTH = parseInt(SLIDER.value)
 
 // Constants for maze tranisitions
-const TIME = 40; // Delay between each step
+const TIME = 10; // Delay between each step
 const LEFT = 0;
 const TOP = 1;
 const RIGHT = 2;
@@ -29,6 +29,9 @@ SLIDER.oninput = () => {
 const delay = () => new Promise(resolve => setTimeout(resolve,TIME));
 
 const colorBox = async (box, active) => {
+    if (box.visited) {
+        box.classList.remove('grid-item-visited');
+    }
     box.classList.add(active ? 'grid-item-active' : 'grid-item-visited');
     await delay();
 }
@@ -118,15 +121,19 @@ const generateMazeBinary = async () => {
         await colorBox(box, true)
         if (!box.visited) {
             box.visited = true;
-            if ((row == (LENGTH - 1)) && (col == (LENGTH -1))) { //corner right
-                console.log('end');
+            // bottom corner right
+            if ((row == (LENGTH - 1)) && (col == (LENGTH -1))) { 
+                console.log('Completed Binary');
             }
+            // Last row
             else if (row == (LENGTH -1)) {
                 await removeBoxSide(i, boxes, RIGHT);
             }
+            // Last column
             else if (col == (LENGTH - 1)) {
                 await removeBoxSide(i, boxes, BOTTOM);
             }
+            // Else
             else {
                 await removeBoxSide(i, boxes,  (random() == 0) ? BOTTOM : RIGHT);
             }
@@ -140,104 +147,93 @@ const generatePrims = () =>{
     
 }
 
-const generateAldousBroder = () =>{
+const generateAldousBroder = async () =>{
     const boxes = GRID.children
-    
-    // (0) south, (1) north (2) east (3) west 
-    let counter = LENGTH*LENGTH;
-    let i = 0
-    let box = boxes[i]
-    box.visited = true
-    counter = counter -1
+
     const random = () => Math.floor((Math.random() * 4) + 0)
 
-    while(counter != 0){ 
-        let [row, col] = [Math.floor(i/LENGTH), i % LENGTH]
-        box = boxes[i]
-        let r = random()
-        if (r == 0){//down
-            box = boxes[i+LENGTH]
-            if (row == (LENGTH - 1)) {
-                continue
-            }
-            if (!box.visited){
-                box.visited = true
-                box.classList.add('grid-item-no-top')
-                let boxTop = boxes[i]
-                boxTop.classList.add('grid-item-no-bottom')
-                counter = counter - 1
-                i = i + LENGTH
-            }
-            else{
-                i = i+LENGTH
-            }
+    const getNeighbourBox = (row,col, dir) => {
+        // North
+        if (dir == TOP) {
+            return (row != 0) ? boxes[i-LENGTH] : null;
         }
-        else if (r == 1){ //top
-            box = boxes[i-LENGTH]
-            if (row == (0)){
-                continue
-            }
-            if (!box.visited){
-                box.visited = true
-                box.classList.add('grid-item-no-bottom')
-                let boxBottom = boxes[i]
-                boxBottom.classList.add('grid-item-no-top')
-                counter = counter - 1
-                i = i-LENGTH
-            }
-            else{
-                i = i-LENGTH
-            }
+        // East
+        else if (dir == RIGHT) {
+            return (col != LENGTH-1) ? boxes[i+1] : null;
         }
-        else if (r == 2){ //right
-            box = boxes[i+1]
-            if (col == (LENGTH-1)){
-                continue
-            }
-            if (!box.visited){
-                box.visited = true
-                box.classList.add('grid-item-no-left')
-                let boxLeft = boxes[i]
-                boxLeft.classList.add('grid-item-no-right')
-                counter = counter - 1
-                i = i+1
-            }
-            else{
-                i = i+1
-            }
+        // South
+        else if (dir == BOTTOM) {
+            return (row != LENGTH-1) ? boxes[i+LENGTH] : null;
+
         }
-        else if (r == 3){ //left
-            if (col == 0){
-                continue
-            }
-            box = boxes[i-1]
-            if (!box.visited){
-                box.visited = true
-                box.classList.add('grid-item-no-right')
-                let boxRight = boxes[i]
-                boxRight.classList.add('grid-item-no-left')
-                counter = counter - 1
-                i = i-1
-            }
-            else{
-                i=i-1
-            }
+        // West 
+        else if (dir == LEFT) {
+            return (col != 0) ? boxes[i-1] : null;
         }
-        
     }
 
-    
+    const carvePath = async (i, dir) => {
+        if (dir == TOP) {
+            await removeBoxSide(i, boxes, TOP);
+        }
+        else if (dir == RIGHT) {
+            await removeBoxSide(i, boxes, RIGHT);
+        }
+        else if (dir == BOTTOM) {
+            await removeBoxSide(i, boxes, BOTTOM);
+        }
+        else if (dir == LEFT) {
+            await removeBoxSide(i, boxes, LEFT);
+        }
+    }
 
-    /*
-    initialize the box, (0th box) -> check visited
-    while (counter != 0)
-    random assigning either to get s,e,w,n
-    if (s) -> box goes down, check if its unvisited -> remove border -> counter -1 
-                                    if its visited -> pass
+    let unvisted = LENGTH*LENGTH;
+    let i = 0
 
+    let box = boxes[i]
+    box.visited = true
+    unvisted = unvisted - 1
 
-    */
+    while (unvisted > 0) { 
         
+        let [row, col] = [Math.floor(i/LENGTH), i % LENGTH];
+
+        // Highlight current box
+        await colorBox(box, true);
+
+        // Travel random direction
+        let randomDir = random();
+
+        // Get the box of neighbour traveled to.
+        neighbourBox = getNeighbourBox(row, col, randomDir);
+        
+        if ((neighbourBox != null)) {
+            
+            if (!neighbourBox.visited) {
+                await carvePath(i, randomDir);
+                neighbourBox.visited = true;
+                unvisted -= 1;
+            }
+            
+            if (randomDir == TOP) {
+                i = i - LENGTH;
+            }
+            else if (randomDir == BOTTOM) {
+                i = i+LENGTH;
+            }
+            else if (randomDir == LEFT) {
+                i -= 1;
+            }
+            else {
+                i+=1;
+            }
+
+        }
+        await colorBox(box, false);
+        box = neighbourBox == null ? box : neighbourBox;
+    }
+    await colorBox(box, false);
+    console.log('Completed AldousBroder');
 }
 
 /**

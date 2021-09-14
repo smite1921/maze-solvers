@@ -76,10 +76,12 @@ form{
 
 .grid-item-active {
   background: lightgreen;
+  border-color: crimson;
 }
 
 .grid-item-visited {
   background-color: lightgrey;
+  border-color: black;
 }
 
 h1 {
