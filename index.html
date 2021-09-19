@@ -2,7 +2,7 @@
 <html>
 
   <head>
-    <title>Maze Solver</title>
+    <title>Maze Generator</title>
     <link href = "style.css" rel = "stylesheet" type = "text/css">
     <link href="https://fonts.googleapis.com/css?family=Cardo:400,700|Oswald" rel="stylesheet">
   </head>
@@ -11,7 +11,7 @@
   <body>
 
     <div class="top-banner">
-      <h1>Maze Solver</h1> 
+      <h1>Maze Generator</h1> 
     </div>
 
     <div class="body">
@@ -21,7 +21,7 @@
       <div class="grid-container"></div>
 
       <form onsubmit="event.preventDefault();generateMaze()">
-        <label for="maze-gen">Choose a Maze Generation Algorithm</label>
+        <label for="maze-gen">Choose an algorithm </label>
         
         <select name="maze-gen" id="maze-gen">
           <option value="option1">Binary</option>
@@ -29,23 +29,14 @@
           <option value="option3">Prim's</option>
           <option value="option4">Option 4</option>
         </select>
-        <input type="submit" value="Generate">
+      
+        <input type="submit" value="GO">
 
       </form>
-
-      <form onsubmit="event.preventDefault();solveMaze()">
-        <label for="maze-solve">Choose a Maze Solving Algorithm</label>
-        
-        <select name="maze-solve" id="maze-solve">
-          <option value="option1">Option 1</option>
-          <option value="option2">Option 2</option>
-          <option value="option3">Option 3</option>
-          <option value="option4">Option 4</option>
-        </select>
-
-        <input type="submit" value="Solve">
-        
-      </form>
+      
+      
+      
+      
 
       
     

@@ -264,6 +264,8 @@ const generateMaze = () => {
 /**
  * Callback function for solve maze form
  */
+/**
+ 
 const solveMaze = () => {
     switch (document.getElementById('maze-solve').value) {
         case 'option1':
@@ -283,6 +285,8 @@ const solveMaze = () => {
             break;
     }
 }
+* 
+ */
 
 /**
  * Makes a n x n grid
